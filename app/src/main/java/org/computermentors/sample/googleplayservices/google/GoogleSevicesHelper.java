@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -16,6 +17,9 @@ public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks,
         public void onConnected();
         public void onDisconnected();
     }
+
+    public static final int REQUEST_CODE_RESOLUTION = -100;
+    public static final int REQUEST_CODE_AVAILABILITY = -101;
 
     private Activity activity;
     private GoogleServicesListener listener;
@@ -29,6 +33,29 @@ public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks,
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+    }
+
+    public void connect(){
+        apiClient.connect();
+    }
+
+    public void disconnect(){
+        apiClient.disconnect();
+    }
+
+    private boolean isGooglePlayServicesAvailable(){
+        int availability = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+        switch (availability){
+            case ConnectionResult.SUCCESS:
+                return true;
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                GoogleApiAvailability.getInstance().getErrorDialog(activity, availability,REQUEST_CODE_AVAILABILITY).show();
+                return false;
+            default:
+                return false;
+        }
     }
 
     @Override
