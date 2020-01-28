@@ -1,14 +1,16 @@
 package org.computermentors.sample.googleplayservices.google;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -36,11 +38,19 @@ public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks,
     }
 
     public void connect(){
-        apiClient.connect();
+        if (isGooglePlayServicesAvailable()) {
+            apiClient.connect();
+        } else {
+            listener.onDisconnected();
+        }
     }
 
     public void disconnect(){
-        apiClient.disconnect();
+        if (isGooglePlayServicesAvailable()) {
+            apiClient.disconnect();
+        } else {
+            listener.onDisconnected();
+        }
     }
 
     private boolean isGooglePlayServicesAvailable(){
@@ -60,16 +70,34 @@ public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
+        listener.onConnected();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        listener.onDisconnected();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()){
+            try{
+                connectionResult.startResolutionForResult(activity, REQUEST_CODE_RESOLUTION);
+            } catch (IntentSender.SendIntentException e){
+                connect();
+            }
+        } else {
+            listener.onDisconnected();
+        }
+    }
 
+    public void handleActivityResult (int requestCode, int resultCode, Intent data){
+        if (requestCode == REQUEST_CODE_RESOLUTION || requestCode == REQUEST_CODE_AVAILABILITY){
+            if (resultCode == Activity.RESULT_OK){
+                connect();
+            } else {
+                listener.onDisconnected();
+            }
+        }
     }
 }
