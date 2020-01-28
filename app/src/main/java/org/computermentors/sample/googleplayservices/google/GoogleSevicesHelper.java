@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 
 public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-
     public interface GoogleServicesListener{
         public void onConnected();
         public void onDisconnected();
@@ -26,6 +25,7 @@ public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks,
     private Activity activity;
     private GoogleServicesListener listener;
     private GoogleApiClient apiClient;
+
 
     public GoogleSevicesHelper(Activity activity, GoogleServicesListener listener){
         this.listener = listener;

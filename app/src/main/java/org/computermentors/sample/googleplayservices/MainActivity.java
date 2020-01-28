@@ -1,20 +1,23 @@
 package org.computermentors.sample.googleplayservices;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import org.computermentors.sample.googleplayservices.google.GoogleSevicesHelper;
+import org.computermentors.sample.googleplayservices.model.ActiveListings;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import org.computermentors.sample.googleplayservices.api.Etsy;
-import org.computermentors.sample.googleplayservices.model.ActiveListings;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String STATE_ACTIVE_LISTINGS = "StateActiveListings";
     private ListingAdapter adapter;
+    private GoogleSevicesHelper googleSevicesHelper;
 
     private RecyclerView recyclerView;
     private View progressBar;
@@ -35,21 +38,33 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ListingAdapter(this);
 
         recyclerView.setAdapter(adapter);
+        googleSevicesHelper = new GoogleSevicesHelper(this, adapter);
+
+        showLoading();
 
         if (savedInstanceState == null){
-            showLoading();
-            Etsy.getActiveListings(adapter);
-        } else {
             if (savedInstanceState.containsKey(STATE_ACTIVE_LISTINGS)) {
                 adapter.success((ActiveListings) savedInstanceState.getParcelable(STATE_ACTIVE_LISTINGS), null);
-                showList();
-            }else {
-                showLoading();
-                Etsy.getActiveListings(adapter);
             }
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleSevicesHelper.connect();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        googleSevicesHelper.disconnect();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        googleSevicesHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
