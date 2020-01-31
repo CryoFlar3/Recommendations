@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.computermentors.sample.googleplayservices.api.Etsy;
-import org.computermentors.sample.googleplayservices.google.GoogleSevicesHelper;
+import org.computermentors.sample.googleplayservices.google.GoogleServicesHelper;
 import org.computermentors.sample.googleplayservices.model.ActiveListings;
 import org.computermentors.sample.googleplayservices.model.Listing;
 
@@ -20,7 +20,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder>
-implements Callback<ActiveListings>, GoogleSevicesHelper.GoogleServicesListener {
+implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener {
 
     private MainActivity activity;
     private LayoutInflater inflater;

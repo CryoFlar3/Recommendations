@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import org.computermentors.sample.googleplayservices.google.GoogleSevicesHelper;
+import org.computermentors.sample.googleplayservices.google.GoogleServicesHelper;
 import org.computermentors.sample.googleplayservices.model.ActiveListings;
 
 import androidx.annotation.Nullable;
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String STATE_ACTIVE_LISTINGS = "StateActiveListings";
     private ListingAdapter adapter;
-    private GoogleSevicesHelper googleSevicesHelper;
+    private GoogleServicesHelper googleServicesHelper;
 
     private RecyclerView recyclerView;
     private View progressBar;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ListingAdapter(this);
 
         recyclerView.setAdapter(adapter);
-        googleSevicesHelper = new GoogleSevicesHelper(this, adapter);
+        googleServicesHelper = new GoogleServicesHelper(this, adapter);
 
         showLoading();
 
@@ -52,19 +52,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        googleSevicesHelper.connect();
+        googleServicesHelper.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        googleSevicesHelper.disconnect();
+        googleServicesHelper.disconnect();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        googleSevicesHelper.handleActivityResult(requestCode, resultCode, data);
+        googleServicesHelper.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override

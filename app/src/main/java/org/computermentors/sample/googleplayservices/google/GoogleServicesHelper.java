@@ -13,7 +13,7 @@ import com.google.android.gms.plus.Plus;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleServicesHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public interface GoogleServicesListener{
         public void onConnected();
@@ -28,7 +28,7 @@ public class GoogleSevicesHelper implements GoogleApiClient.ConnectionCallbacks,
     private GoogleApiClient apiClient;
 
 
-    public GoogleSevicesHelper(Activity activity, GoogleServicesListener listener){
+    public GoogleServicesHelper(Activity activity, GoogleServicesListener listener){
         this.listener = listener;
         this.activity = activity;
 
