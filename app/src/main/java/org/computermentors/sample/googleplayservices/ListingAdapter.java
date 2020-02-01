@@ -3,9 +3,11 @@ package org.computermentors.sample.googleplayservices;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.plus.PlusOneButton;
 import com.squareup.picasso.Picasso;
 
 import org.computermentors.sample.googleplayservices.api.Etsy;
@@ -48,9 +50,11 @@ implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener
         holder.shopNameView.setText(listing.Shop.shop_name);
 
         if (isGooglePlayServicesAvailable){
-
+            holder.plusOneButton.setVisibility(View.VISIBLE);
+            holder.plusOneButton.initialize(listing.url, position);
+            holder.plusOneButton.setAnnotation(PlusOneButton.ANNOTATION_NONE);
         } else {
-
+            holder.plusOneButton.setVisibility(View.GONE);
         }
 
         Picasso.get()
@@ -112,6 +116,8 @@ implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener
         public TextView titleView;
         public TextView shopNameView;
         public TextView priceView;
+        public PlusOneButton plusOneButton;
+        public ImageButton shareButton;
 
 
         public ListingHolder(@NonNull View itemView) {
@@ -120,6 +126,8 @@ implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener
             titleView = itemView.findViewById(R.id.listing_title);
             shopNameView = itemView.findViewById(R.id.listing_shop_name);
             priceView = itemView.findViewById(R.id.listing_price);
+            plusOneButton = itemView.findViewById(R.id.listing_plus_one_button);
+            shareButton = itemView.findViewById(R.id.listing_share_button);
         }
     }
 }

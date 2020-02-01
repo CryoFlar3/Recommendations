@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         googleServicesHelper.handleActivityResult(requestCode, resultCode, data);
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override
