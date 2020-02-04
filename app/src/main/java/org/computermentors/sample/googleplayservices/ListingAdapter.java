@@ -1,5 +1,7 @@
 package org.computermentors.sample.googleplayservices;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.plus.PlusOneButton;
+import com.google.android.gms.plus.PlusShare;
 import com.squareup.picasso.Picasso;
 
 import org.computermentors.sample.googleplayservices.api.Etsy;
@@ -23,6 +26,9 @@ import retrofit.client.Response;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder>
 implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener {
+
+    public static final int REQUEST_CODE_PLUS_ONE = 10;
+    public static final int REQUEST_CODE_SHARE = 11;
 
     private MainActivity activity;
     private LayoutInflater inflater;
@@ -51,10 +57,33 @@ implements Callback<ActiveListings>, GoogleServicesHelper.GoogleServicesListener
 
         if (isGooglePlayServicesAvailable){
             holder.plusOneButton.setVisibility(View.VISIBLE);
-            holder.plusOneButton.initialize(listing.url, position);
+            holder.plusOneButton.initialize(listing.url, REQUEST_CODE_PLUS_ONE);
             holder.plusOneButton.setAnnotation(PlusOneButton.ANNOTATION_NONE);
+
+            holder.shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new PlusShare.Builder(activity)
+                            .setType("text/plain")
+                            .setText("Checkout this item on Etsy " + listing.title)
+                            .setContentUrl(Uri.parse(listing.url))
+                            .getIntent();
+                    activity.startActivityForResult(intent, REQUEST_CODE_SHARE);
+                }
+            });
         } else {
             holder.plusOneButton.setVisibility(View.GONE);
+
+            holder.shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, "Checkout this item on Etsy " + listing.title + " " + listing.url);
+                    intent.setType("text/plain");
+
+                    activity.startActivityForResult(Intent.createChooser(intent, "share"), REQUEST_CODE_SHARE);
+                }
+            });
         }
 
         Picasso.get()
